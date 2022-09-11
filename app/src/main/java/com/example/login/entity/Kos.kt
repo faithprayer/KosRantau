@@ -14,10 +14,7 @@ class Kos (val namaKos: String, val alamatKos : String, val namaPemilik : String
             Kos("Kos G", "Jl.Budi 7", "Satya"),
             Kos("Kos H", "Jl.Budi 8", "Gunda"),
             Kos("Kos I", "Jl.Budi 9", "Fajar"),
-            Kos("Kos J", "Jl.Budi 10", "Bintang"),
-            Kos("Kos K", "Jl.Budi 11", "Galih"),
-            Kos("Kos L", "Jl.Budi 12", "Dewantara"),
-            Kos("Kos M", "Jl.Budi 13", "Galih")
+            Kos("Kos J", "Jl.Budi 10", "Bintang")
         )
     }
 }
