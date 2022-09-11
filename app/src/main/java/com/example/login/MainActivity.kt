@@ -3,6 +3,7 @@ package com.example.login
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -17,11 +18,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var PasswordInput : TextInputEditText
     lateinit var mBundle: Bundle
 
-    lateinit var vUsername: String
+    var vUsername: String =""
     lateinit var vNoHandphone: String
     lateinit var vEmail: String
     lateinit var vTglLahir:String
-    lateinit var vPassword: String
+    var vPassword: String =""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,9 +38,13 @@ class MainActivity : AppCompatActivity() {
         PasswordInput = findViewById(R.id.textInputPassword)
         val btnLogin: Button = findViewById(R.id.btnLogin)
         val moveReg: TextView = findViewById(R.id.textMoveRegister)
+
         getBundle()
-        btnLogin.setOnClickListener {
+
+        btnLogin.setOnClickListener (View.OnClickListener{
             var checkLogin = false
+            inputUsername.setError(null)
+            inputPassword.setError(null)
             val username: String = inputUsername.getEditText()?.getText().toString()
             val password: String = inputPassword.getEditText()?.getText().toString()
 
@@ -53,16 +58,23 @@ class MainActivity : AppCompatActivity() {
                 checkLogin = false
             }
 
-            if (username == "admin" && password == "admin" || username == vUsername && password == vPassword) checkLogin = true
-            if (!checkLogin) return@setOnClickListener
+            if (username == "admin" && password == "admin") {
+                checkLogin = true
+            }
+            if(intent.getBundleExtra("register") !=null){
+                if(username == vUsername && password == vPassword){
+                    checkLogin =true
+                }
+            }
+            if(!checkLogin)return@OnClickListener
             val moveHome = Intent(this@MainActivity, HomeActivity::class.java)
             startActivity(moveHome)
-        }
+        })
 
-        moveReg.setOnClickListener{
+        moveReg.setOnClickListener(View.OnClickListener{
             val moverReg = Intent(this, RegisterActivity::class.java)
             startActivity(moverReg)
-        }
+        })
     }
 
     fun getBundle() {
