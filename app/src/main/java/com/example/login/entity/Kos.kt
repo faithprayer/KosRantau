@@ -5,7 +5,7 @@ class Kos (val namaKos: String, val alamatKos : String, val namaPemilik : String
     companion object{
         @JvmField
         var listOfKos = arrayOf(
-            Kos("Kos A", "Jl.Budi 1", "Budi"),
+            Kos("Kos A", "Jl.Budi 1", "Andri"),
             Kos("Kos B", "Jl.Budi 2", "Dian"),
             Kos("Kos C", "Jl.Budi 3", "Dila"),
             Kos("Kos D", "Jl.Budi 4", "Rama"),
