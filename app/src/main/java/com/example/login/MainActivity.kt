@@ -25,6 +25,13 @@ class MainActivity : AppCompatActivity() {
     var vPassword: String =""
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val isFirstRun = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getBoolean("isFirstRun",true)
+        if(isFirstRun){
+            startActivity(Intent(this@MainActivity,SplashScreen :: class.java))
+            finish()
+        }
+        getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit().putBoolean("isFirstRun",false).commit()
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
