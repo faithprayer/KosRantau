@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import com.example.login.databinding.ActivityMainBinding
+import com.example.login.databinding.ActivityRegisterBinding
 import com.google.android.material.textfield.TextInputLayout
 
 class RegisterActivity : AppCompatActivity() {
@@ -15,29 +17,25 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var inputtanggalLahir: TextInputLayout
     private lateinit var inputnomorhandphone: TextInputLayout
     private lateinit var btnRegister: Button
+    private lateinit var binding : ActivityRegisterBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
-
-        inputusername = findViewById(R.id.inputLayoutRegUsername)
-        inputnomorhandphone = findViewById(R.id.inputLayoutNomorHandphone)
-        inputemail = findViewById(R.id.inputLayoutEmail)
-        inputtanggalLahir = findViewById(R.id.inputLayoutTanggalLahir)
-        inputpassword = findViewById(R.id.inputLayoutPassword)
-        btnRegister = findViewById(R.id.btnRegistrasi)
+        binding = ActivityRegisterBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val moveLogin: TextView = findViewById(R.id.textMoveLogin)
 
-        btnRegister.setOnClickListener(View.OnClickListener  {
+        binding.btnRegistrasi.setOnClickListener(View.OnClickListener  {
 
             var checkRegis = false
 
-            val username: String = inputusername.getEditText()?.getText().toString()
-            val nohandphone: String = inputnomorhandphone.getEditText()?.getText().toString()
-            val email: String = inputemail.getEditText()?.getText().toString()
-            val tanggalLahir: String = inputtanggalLahir.getEditText()?.getText().toString()
-            val password: String = inputpassword.getEditText()?.getText().toString()
+            val username: String = binding.inputLayoutRegUsername.getEditText()?.getText().toString()
+            val nohandphone: String = binding.inputLayoutNomorHandphone.getEditText()?.getText().toString()
+            val email: String = binding.inputLayoutEmail.getEditText()?.getText().toString()
+            val tanggalLahir: String = binding.inputLayoutTanggalLahir.getEditText()?.getText().toString()
+            val password: String = binding.inputLayoutPassword.getEditText()?.getText().toString()
             val mBundle = Bundle()
 
             mBundle.putString("nama", username)
@@ -45,11 +43,6 @@ class RegisterActivity : AppCompatActivity() {
             mBundle.putString("email", email)
             mBundle.putString("tanggalLahir", tanggalLahir)
             mBundle.putString("password", password)
-
-
-
-
-
 
             if (username.isEmpty()) {
                 inputusername.setError("Username must be filled with text")
