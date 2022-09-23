@@ -8,16 +8,18 @@ import android.widget.Button
 import android.widget.TextView
 import com.example.login.databinding.ActivityMainBinding
 import com.example.login.databinding.ActivityRegisterBinding
+import com.example.login.room.User
+import com.example.login.room.UserDB
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class RegisterActivity : AppCompatActivity() {
-    private lateinit var inputusername: TextInputLayout
-    private lateinit var inputpassword: TextInputLayout
-    private lateinit var inputemail: TextInputLayout
-    private lateinit var inputtanggalLahir: TextInputLayout
-    private lateinit var inputnomorhandphone: TextInputLayout
-    private lateinit var btnRegister: Button
     private lateinit var binding : ActivityRegisterBinding
+    val db by lazy { UserDB(this) }
+    private var userId: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,10 +27,12 @@ class RegisterActivity : AppCompatActivity() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        supportActionBar?.hide()
+
         val moveLogin: TextView = findViewById(R.id.textMoveLogin)
 
         binding.btnRegistrasi.setOnClickListener(View.OnClickListener  {
-
+            var intent = Intent(this, MainActivity::class.java)
             var checkRegis = false
 
             val username: String = binding.inputLayoutRegUsername.getEditText()?.getText().toString()
@@ -45,38 +49,49 @@ class RegisterActivity : AppCompatActivity() {
             mBundle.putString("password", password)
 
             if (username.isEmpty()) {
-                inputusername.setError("Username must be filled with text")
+                binding.inputLayoutRegUsername.setError("Username must be filled with text")
                 checkRegis = false
             }
 
             if (nohandphone.isEmpty()) {
-                inputnomorhandphone.setError("Password must be filled with text")
+                binding.inputLayoutNomorHandphone.setError("Password must be filled with text")
                 checkRegis = false
             }
 
             if (email.isEmpty()) {
-                inputemail.setError("Password must be filled with text")
+                binding.inputLayoutEmail.setError("Password must be filled with text")
                 checkRegis = false
             }
 
             if (tanggalLahir.isEmpty()) {
-                inputtanggalLahir.setError("Password must be filled with text")
+                binding.inputLayoutTanggalLahir.setError("Password must be filled with text")
                 checkRegis = false
             }
 
             if (password.isEmpty()) {
-                inputpassword.setError("Password must be filled with text")
+                binding.inputLayoutPassword.setError("Password must be filled with text")
                 checkRegis = false
             }
 
             if(!username.isEmpty() && !password.isEmpty() && !email.isEmpty() && !tanggalLahir.isEmpty() && !nohandphone.isEmpty() ) {
-                val moveRegister = Intent(this@RegisterActivity, MainActivity::class.java)
-                moveRegister.putExtra("register", mBundle)
-                startActivity(moveRegister)
                 checkRegis=true
             }
 
-            if (!checkRegis) return@OnClickListener
+            if (!checkRegis) {
+                return@OnClickListener
+            }
+
+            CoroutineScope(Dispatchers.IO).launch {
+                run{
+                    db.userDao().addUser(
+                        User(0, username,nohandphone,email,tanggalLahir,password)
+                    )
+                    finish()
+                }
+            }
+            intent.putExtra("register", mBundle)
+            intent.putExtra("intent_id",0)
+            startActivity(intent)
         })
         moveLogin.setOnClickListener{
             val moveLog = Intent(this, MainActivity::class.java)
