@@ -55,9 +55,7 @@ class ProfileFragment : Fragment() {
 
 
         binding.btnUpdate.setOnClickListener {
-            val move = Intent(activity, EditActivity::class.java)
-            startActivity(move)
-            activity?.finish()
+            transitionFragment(FragmentupdateProfile())
         }
 
         binding.btnLogout.setOnClickListener {
@@ -83,6 +81,13 @@ class ProfileFragment : Fragment() {
         binding.viewNomorTelepon.setText(user.NomorHandphone)
         binding.viewEmail.setText(user.Email)
         binding.viewTanggalLahir.setText(user.TanggalLahir)
+    }
+
+    private fun transitionFragment(fragment: Fragment) {
+        val transition = requireActivity().supportFragmentManager.beginTransaction()
+        transition.replace(R.id.mainContainer, fragment)
+            .addToBackStack(null).commit()
+        transition.hide(ProfileFragment())
     }
 
 }
