@@ -12,6 +12,11 @@
         android:title="Chat" />
 
     <item
+        android:id="@+id/navigation_pemesanan"
+        android:icon="@drawable/ic_pemesanan"
+        android:title="Pemesanan" />
+
+    <item
         android:id="@+id/navigation_profile"
         android:icon="@drawable/ic_person_pin_24"
         android:title="Profile" />

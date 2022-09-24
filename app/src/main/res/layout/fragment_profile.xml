@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ProfileFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/textProfile"
-        android:layout_width="234dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Profile"
         android:textAlignment="center"
@@ -19,11 +19,45 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints" />
 
-    <Button
-        android:id="@+id/btnLogout"
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/textNama"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="272dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="28dp"
+        android:layout_marginBottom="80dp"
+
+        tools:text="Username" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/textEmail"
+        android:layout_width="294dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginBottom="50dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:text="Email"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textPhone" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/textPhone"
+        android:layout_width="294dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="28dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="16dp"
+        android:text="Nomor Handphone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textNama" />
+
+    <Button
+        android:id="@+id/btnedit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="564dp"
         android:gravity="center"
         android:text="LOGOUT"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,5 +65,16 @@
         app:layout_constraintTop_toBottomOf="@+id/textProfile"
         tools:ignore="MissingConstraints" />
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/textTanggal"
+        android:layout_width="295dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center"
+        android:text="Tanggal Lahir"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textEmail" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
