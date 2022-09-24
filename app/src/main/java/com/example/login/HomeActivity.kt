@@ -1,5 +1,7 @@
 package com.example.login
 
+import android.content.Context
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -19,6 +21,7 @@ import androidx.navigation.ui.NavigationUI.setupWithNavController
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +32,11 @@ class HomeActivity : AppCompatActivity() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigation)
         setupWithNavController(bottomNavigationView, navController)
 
+        sharedPreferences = getSharedPreferences("login", Context.MODE_PRIVATE)
+
     }
 
+    fun getSharedPreferences() : SharedPreferences{
+        return sharedPreferences
+    }
 }

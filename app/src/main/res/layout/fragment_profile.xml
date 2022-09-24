@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,72 +9,162 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/textProfile"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Profile"
         android:textAlignment="center"
         android:textColor="@color/black"
-        android:textSize="50dp"
+        android:textSize="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints" />
+    <ImageView
+        android:id="@+id/logoProfile"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_person"
+        android:layout_marginLeft="140dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textProfile"/>
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/textNama"
+    <TextView
+        android:id="@+id/textUsername"
+        style="@style/TextAppearance.MaterialComponents.Headline6"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:textSize="20sp"
+        android:text="Username"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="50dp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logoProfile" />
+
+    <TextView
+        android:id="@+id/viewUsername"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:padding="12dp"
+        android:text=""
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textUsername" />
+
+    <TextView
+        android:id="@+id/textEmail"
+        style="@style/TextAppearance.MaterialComponents.Headline6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginStart="28dp"
-        android:layout_marginBottom="80dp"
-
-        tools:text="Username" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/textEmail"
-        android:layout_width="294dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginBottom="50dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="16dp"
         android:text="Email"
+        android:textSize="20sp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="50dp"
+        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textPhone" />
+        app:layout_constraintTop_toBottomOf="@id/viewUsername" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/textPhone"
-        android:layout_width="294dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="28dp"
-        android:layout_gravity="center"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="16dp"
-        android:text="Nomor Handphone"
+    <TextView
+        android:id="@+id/viewEmail"
+        style="@style/TextAppearance.MaterialComponents.Caption"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:padding="12dp"
+        android:text=""
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textNama" />
+        app:layout_constraintTop_toBottomOf="@id/textEmail" />
+
+    <TextView
+        android:id="@+id/textNoTelp"
+        style="@style/TextAppearance.MaterialComponents.Headline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nomor Telepon"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/viewEmail" />
+
+    <TextView
+        android:id="@+id/viewNomorTelepon"
+        style="@style/TextAppearance.MaterialComponents.Caption"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:padding="12dp"
+        android:text=""
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textNoTelp" />
+
+    <TextView
+        android:id="@+id/textTglLahir"
+        style="@style/TextAppearance.MaterialComponents.Headline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tanggal Lahir"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/viewNomorTelepon" />
+
+    <TextView
+        android:id="@+id/viewTanggalLahir"
+        style="@style/TextAppearance.MaterialComponents.Caption"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:padding="12dp"
+        android:text=""
+        android:textColor="@color/black"
+        android:textSize="15dp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textTglLahir" />
+
 
     <Button
-        android:id="@+id/btnedit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="564dp"
-        android:gravity="center"
-        android:text="LOGOUT"
+        android:id="@+id/btnUpdate"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/orange"
+        android:text="Update Profil"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:typeface="monospace"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textProfile"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintTop_toBottomOf="@+id/viewTanggalLahir" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/textTanggal"
-        android:layout_width="295dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="16dp"
-        android:layout_gravity="center"
-        android:text="Tanggal Lahir"
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="150dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="1dp"
+        android:backgroundTint="@color/white"
+        android:text="Logout"
+        android:textColor="@color/orange"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:typeface="monospace"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textEmail" />
+        app:layout_constraintTop_toBottomOf="@+id/btnUpdate" />
 
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

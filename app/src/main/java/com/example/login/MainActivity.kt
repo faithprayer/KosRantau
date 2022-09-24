@@ -1,12 +1,15 @@
 package com.example.login
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.example.login.room.UserDB
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
@@ -24,8 +27,11 @@ class MainActivity : AppCompatActivity() {
     lateinit var vTglLahir:String
     var vPassword: String =""
 
+    private lateinit var sharedPreferences : SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         val isFirstRun = getSharedPreferences("PREFERENCE", MODE_PRIVATE).getBoolean("isFirstRun",true)
+
         if(isFirstRun){
             startActivity(Intent(this@MainActivity,SplashScreen :: class.java))
             finish()
@@ -36,6 +42,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         setTitle("User Login")
+        supportActionBar?.hide()
+
+        val db by lazy { UserDB(this) }
+        val userDAO = db.userDao()
+
+        sharedPreferences = getSharedPreferences("login",Context.MODE_PRIVATE)
 
         inputUsername = findViewById(R.id.inputLayoutUsername)
         inputPassword = findViewById(R.id.inputLayoutPassword)
@@ -43,6 +55,7 @@ class MainActivity : AppCompatActivity() {
 
         usernameInput = findViewById(R.id.TextInputUsername)
         PasswordInput = findViewById(R.id.textInputPassword)
+
         val btnLogin: Button = findViewById(R.id.btnLogin)
         val moveReg: TextView = findViewById(R.id.textMoveRegister)
 
@@ -65,9 +78,18 @@ class MainActivity : AppCompatActivity() {
                 checkLogin = false
             }
 
+            val user = userDAO.cekUser(username, password)
+            if(user != null){
+                sharedPreferences.edit()
+                    .putInt("id",user.id)
+                    .apply()
+                checkLogin = true
+            }
+
             if (username == "admin" && password == "admin") {
                 checkLogin = true
             }
+
             if(intent.getBundleExtra("register") !=null){
                 if(username == vUsername && password == vPassword){
                     checkLogin =true
@@ -79,7 +101,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         moveReg.setOnClickListener(View.OnClickListener{
-            val moverReg = Intent(this, RegisterActivity::class.java)
+            val moverReg = Intent(this@MainActivity, RegisterActivity::class.java)
             startActivity(moverReg)
         })
     }

@@ -3,6 +3,7 @@ package com.example.login
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.ContactsContract
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -18,7 +19,7 @@ import kotlinx.coroutines.launch
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding : ActivityRegisterBinding
-    val db by lazy { UserDB(this) }
+
     private var userId: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +27,9 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(R.layout.activity_register)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val db by lazy { UserDB(this) }
+        val userDao = db.userDao()
 
         supportActionBar?.hide()
 
@@ -81,24 +85,16 @@ class RegisterActivity : AppCompatActivity() {
                 return@OnClickListener
             }
 
-            CoroutineScope(Dispatchers.IO).launch {
-                run{
-                    db.userDao().addUser(
-                        User(0, username,nohandphone,email,tanggalLahir,password)
-                    )
-                    finish()
-                }
-            }
+            val user = User(0,username,nohandphone,email,tanggalLahir,password)
+            userDao.addUser(user)
+
             intent.putExtra("register", mBundle)
-            intent.putExtra("intent_id",0)
             startActivity(intent)
         })
         moveLogin.setOnClickListener{
             val moveLog = Intent(this, MainActivity::class.java)
             startActivity(moveLog)
         }
-
     }
-
 
 }
