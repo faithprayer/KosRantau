@@ -17,9 +17,10 @@
         tools:layout="@layout/fragment_chat" />
     <fragment
         android:id="@+id/navigation_pemesanan"
-        android:name="com.example.login.FragmentPemesanan"
+        android:name="com.example.login.PemesananFragment"
         android:label="fragment_pemesanan"
         tools:layout="@layout/fragment_pemesanan"/>
+
     <fragment
         android:id="@+id/navigation_profile"
         android:name="com.example.login.ProfileFragment"
