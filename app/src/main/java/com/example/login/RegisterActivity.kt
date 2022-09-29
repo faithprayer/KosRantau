@@ -1,14 +1,24 @@
 package com.example.login
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.example.login.databinding.ActivityMainBinding
 import com.example.login.databinding.ActivityRegisterBinding
+import com.example.login.notifikasi.NotificationReceiver
 import com.example.login.room.User
 import com.example.login.room.UserDB
 import com.google.android.material.snackbar.Snackbar
@@ -19,7 +29,8 @@ import kotlinx.coroutines.launch
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding : ActivityRegisterBinding
-
+    private val CHANNEL_ID_1 = "channel_notification_01"
+    private val notificationId1 = 101
     private var userId: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +45,7 @@ class RegisterActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
         val moveLogin: TextView = findViewById(R.id.textMoveLogin)
+        createNotificationChannel()
 
         binding.btnRegistrasi.setOnClickListener(View.OnClickListener  {
             var intent = Intent(this, MainActivity::class.java)
@@ -90,10 +102,58 @@ class RegisterActivity : AppCompatActivity() {
 
             intent.putExtra("register", mBundle)
             startActivity(intent)
+
+            sendNotification()
         })
         moveLogin.setOnClickListener{
             val moveLog = Intent(this, MainActivity::class.java)
             startActivity(moveLog)
+        }
+    }
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "Notification Title"
+            val descriptionText = "Notification Description"
+
+            val channel1 = NotificationChannel(CHANNEL_ID_1, name, NotificationManager.IMPORTANCE_DEFAULT).apply {
+                description = descriptionText
+            }
+
+
+            val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+            notificationManager.createNotificationChannel(channel1)
+        }
+    }
+    private fun sendNotification(){
+        val intent: Intent = Intent(this, MainActivity::class.java).apply{
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(this,0,intent,0)
+
+        val broadcastIntent: Intent = Intent(this, NotificationReceiver::class.java)
+        broadcastIntent.putExtra("toastMessage","Selamat Datang " + binding.inputLayoutRegUsername.editText?.text.toString())
+        val actionIntent = PendingIntent.getBroadcast(this,0,broadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val picture = BitmapFactory.decodeResource(resources,R.drawable.logo)
+        val builder = NotificationCompat.Builder(this,CHANNEL_ID_1)
+            .setSmallIcon(R.drawable.logo)
+            .setContentText("Berhasil Register")
+            .setLargeIcon(picture)
+            .setStyle(NotificationCompat.BigPictureStyle()
+                .bigLargeIcon(null)
+                .bigPicture(picture))
+            .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+            .setColor(Color.RED)
+            .setAutoCancel(true)
+            .setOnlyAlertOnce(true)
+            .setContentIntent(pendingIntent)
+            .addAction(R.mipmap.ic_launcher, "Pesan", actionIntent)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+
+        with(NotificationManagerCompat.from(this)){
+            notify(notificationId1,builder.build())
         }
     }
 
