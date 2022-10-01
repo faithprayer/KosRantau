@@ -45,13 +45,13 @@
             android:exported="false">
         </activity>
         <service
-            android:name=".MyFirebaseMessagingService"
+            android:name=".notifikasi.MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
-        <receiver android:name=".NotificationReceiver"/>
+        <receiver android:name=".notifikasi.NotificationReceiver"/>
     </application>
 
 </manifest>
