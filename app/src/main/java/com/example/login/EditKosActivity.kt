@@ -66,8 +66,8 @@ class EditKosActivity : AppCompatActivity() {
                 NotificationCompat.InboxStyle()
                     .addLine("Nama Kos : "+ binding?.editKos?.text.toString())
                     .addLine("Nama Peminjam : "+ binding?.editPengguna?.text.toString())
-                    .addLine("Tanggal Pinjam : "+ binding?.editTanggalMasuk?.text.toString())
-                    .addLine("Tanggal Kembali : "+ binding?.editTanggalPesan?.text.toString())
+                    .addLine("Tanggal Pesan : "+ binding?.editTanggalPesan?.text.toString())
+                    .addLine("Tanggal Masuk : "+ binding?.editTanggalMasuk?.text.toString())
             )
 
 
