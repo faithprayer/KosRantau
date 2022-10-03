@@ -88,6 +88,7 @@ class FragmentupdateProfile : Fragment() {
         )
         userDao.updateUser(user)
     }
+
     private fun transitionFragment(fragment: Fragment) {
         val transition = requireActivity().supportFragmentManager.beginTransaction()
         transition.replace(R.id.mainContainer, fragment)

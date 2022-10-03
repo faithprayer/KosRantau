@@ -25,7 +25,7 @@ class FragmentKos : Fragment() {
         val layoutManager = LinearLayoutManager(context)
         val adapter : RVKosAdapter = RVKosAdapter(Kos.listOfKos)
 
-        val rvKos : RecyclerView = view.findViewById(R.id.rv_kos)
+        val rvKos : RecyclerView = view.findViewById(R.id.rv_kost)
 
         rvKos.layoutManager = layoutManager
         rvKos.setHasFixedSize(true)
