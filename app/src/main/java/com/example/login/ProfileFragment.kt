@@ -28,6 +28,7 @@ import kotlinx.coroutines.*
 import kotlin.system.exitProcess
 
 import com.example.login.*
+import com.example.login.camera.CameraActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -60,6 +61,12 @@ class ProfileFragment : Fragment() {
 
         binding.btnLogout.setOnClickListener {
             val move = Intent(activity, MainActivity::class.java)
+            startActivity(move)
+            activity?.finish()
+        }
+
+        binding.logoProfile.setOnClickListener {
+            val move = Intent(activity, CameraActivity::class.java)
             startActivity(move)
             activity?.finish()
         }
