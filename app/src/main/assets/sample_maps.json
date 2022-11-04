@@ -1,0 +1,25 @@
+{
+  "results": [
+    {
+      "geometry": {
+        "location": {
+          "lat": -7.775347956181717,
+          "lng": 110.41385602715522
+        }
+      },
+      "name": "Kos Artkostel",
+      "vicinity": "Gg. Puri Sari No.117, Tambak Bayan, Caturtunggal, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281"
+    },
+    {
+      "geometry": {
+        "location": {
+          "lat":  -7.7797170148151515,
+          "lng": 110.41507998490428
+        }
+      },
+      "name": "Kos Putra Kencana",
+      "vicinity": "JL. Babarsari, No. 41, Sleman, Pertokoan Babarsari Janti, Janti, Caturtunggal, Kec. Depok, Kabupaten Sleman, Daerah Istimewa Yogyakarta 55281"
+    }
+  ],
+  "status" : "OK"
+}

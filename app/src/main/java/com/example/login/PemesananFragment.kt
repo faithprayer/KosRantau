@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import com.example.login.map.FragmentLokasi
+import kotlinx.android.synthetic.main.fragment_pemesanan.*
 
 class PemesananFragment : Fragment() {
     override fun onCreateView(
@@ -26,5 +28,17 @@ class PemesananFragment : Fragment() {
             val movePeminjam = Intent(this@PemesananFragment.context, ActivityPemesanan::class.java)
             startActivity(movePeminjam)
         })
+
+        btnLokasi.setOnClickListener {
+            transitionFragment(FragmentLokasi());
+        }
+
+    }
+
+    private fun transitionFragment(fragment: Fragment) {
+        val transition = requireActivity().supportFragmentManager.beginTransaction()
+        transition.replace(R.id.mainContainer, fragment)
+            .addToBackStack(null).commit()
+        transition.hide(PemesananFragment())
     }
 }
