@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "852683515783",
-    "project_id": "login-fd160",
-    "storage_bucket": "login-fd160.appspot.com"
+    "project_number": "731475267334",
+    "project_id": "login-fd79b",
+    "storage_bucket": "login-fd79b.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:852683515783:android:8ac4fed385be1f05efd522",
+        "mobilesdk_app_id": "1:731475267334:android:79bff1e23e9e7141941887",
         "android_client_info": {
           "package_name": "com.example.login"
         }
       },
       "oauth_client": [
         {
-          "client_id": "852683515783-eu0visb31l5obrrob3omki53q765vrk4.apps.googleusercontent.com",
+          "client_id": "731475267334-c004mrplfbd8a0d0q1pdoch7amqdgrkk.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBnmaKb5RE0cWtE6eL0s1IRXHu08QS6BAc"
+          "current_key": "AIzaSyA6xq4GxSTGYWiW4lBPUOlGDTWbL6jd92I"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "852683515783-eu0visb31l5obrrob3omki53q765vrk4.apps.googleusercontent.com",
+              "client_id": "731475267334-c004mrplfbd8a0d0q1pdoch7amqdgrkk.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

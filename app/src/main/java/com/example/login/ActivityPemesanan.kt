@@ -1,96 +1,152 @@
 package com.example.login
 
-import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import androidx.appcompat.app.AlertDialog
+import android.view.View
+import android.view.WindowManager
+import android.widget.LinearLayout
+import android.widget.Toast
+import android.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.login.room.Constant
-import com.example.login.room.Kos
-import com.example.login.room.KosDB
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.android.volley.AuthFailureError
+import com.android.volley.RequestQueue
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
+import com.example.login.api.KosApi
+import com.example.login.models.Kos
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_pemesanan.*
 import kotlinx.android.synthetic.main.fragment_pemesanan.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import java.nio.charset.StandardCharsets
 
 class ActivityPemesanan : AppCompatActivity() {
-    val db by lazy { KosDB(this) }
-    lateinit var kosAdapter: KosAdapter
+    private var srPemesanan: SwipeRefreshLayout? = null
+    private var svPemesanan: SearchView? = null
+    private var adapter: KosAdapter? = null
+    private var layoutLoading: LinearLayout? = null
+    private var queue: RequestQueue? = null
+
+    companion object {
+        const val LAUNCH_ADD_ACTIVITY = 123
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pemesanan)
-        setupListener()
-        setupRecyclerView()
-    }
-
-    private fun setupRecyclerView() {
-        kosAdapter = KosAdapter(arrayListOf(), object :
-            KosAdapter.OnAdapterListener{
-            override fun onClick(kos: Kos) {
-
-                intentEdit(kos.id, Constant.TYPE_READ)
+        queue = Volley.newRequestQueue(this)
+        layoutLoading = findViewById(R.id.layout_loading)
+        srPemesanan = findViewById(R.id.sr_pemesanan)
+        svPemesanan = findViewById(R.id.sv_pemesanan)
+        srPemesanan?.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener { allPesanan() })
+        svPemesanan?.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(s: String?): Boolean {
+                return false
             }
-            override fun onUpdate(kos: Kos) {
-                intentEdit(kos.id, Constant.TYPE_UPDATE)
-            }
-            override fun onDelete(kos: Kos) {
-                deleteDialog(kos)
+
+            override fun onQueryTextChange(s: String?): Boolean {
+                adapter!!.filter.filter(s)
+                return false
             }
         })
-        list_kos.apply {
-            layoutManager = LinearLayoutManager(applicationContext)
-            adapter = kosAdapter
+        val fabAdd = findViewById<FloatingActionButton>(R.id.fab_add)
+        fabAdd.setOnClickListener {
+            val  i = Intent(this@ActivityPemesanan, EditKosActivity::class.java)
+            startActivityForResult(i, LAUNCH_ADD_ACTIVITY)
         }
-    }
-    private fun deleteDialog(kos: Kos){
-        val alertDialog = AlertDialog.Builder(this)
-        alertDialog.apply {
-            setTitle("Confirmation")
-            setMessage("Are You Sure to delete this data From${kos.namaKos}?")
-            setNegativeButton("Cancel", DialogInterface.OnClickListener
-            { dialogInterface, i ->
-                dialogInterface.dismiss()
-            })
-            setPositiveButton("Delete", DialogInterface.OnClickListener
-            { dialogInterface, i ->
-                dialogInterface.dismiss()
-                CoroutineScope(Dispatchers.IO).launch {
-                    db.kosDao().deleteKos(kos)
-                    loadData()
-                }
-            })
-        }
-        alertDialog.show()
-    }
-    override fun onStart() {
-        super.onStart()
-        loadData()
+        val rvKos = findViewById<RecyclerView>(R.id.rv_pemesanan)
+        adapter = KosAdapter(ArrayList(), this)
+        rvKos.layoutManager = LinearLayoutManager(this)
+        rvKos.adapter = adapter
+        allPesanan()
+
     }
 
-    fun loadData() {
-        CoroutineScope(Dispatchers.IO).launch {
-            val kos = db.kosDao().getKos()
-            Log.d("FragmentPemesanan","dbResponse: $kos")
-            withContext(Dispatchers.Main){
-                kosAdapter.setData( kos )
+    private fun allPesanan(){
+        srPemesanan!!.isRefreshing = true
+        val stringRequest: StringRequest = object : StringRequest(Method.GET, KosApi.GET_ALL_URL, Response.Listener { response ->
+            val gson = Gson()
+            val jsonObject = JSONObject(response)
+            val jsonData = jsonObject.getJSONArray("data")
+
+            var kos : Array<Kos> = gson.fromJson(jsonData.toString(), Array<Kos>::class.java)
+            adapter!!.setKostList(kos)
+            adapter!!.filter.filter(svPemesanan!!.query)
+            srPemesanan!!.isRefreshing = false
+
+            if(!kos.isEmpty())
+                Toast.makeText(this@ActivityPemesanan, "Data Berhasil Diambil", Toast.LENGTH_SHORT).show()
+            else
+                Toast.makeText(this@ActivityPemesanan, "Data Kosong!", Toast.LENGTH_SHORT).show()
+        }, Response.ErrorListener { error ->
+            srPemesanan!!.isRefreshing = false
+            try {
+                val responseBody = String(error.networkResponse.data, StandardCharsets.UTF_8)
+                val errors = JSONObject(responseBody)
+                Toast.makeText(this@ActivityPemesanan, errors.getString("message"), Toast.LENGTH_SHORT).show()
+            } catch (e:Exception) {
+                Toast.makeText(this@ActivityPemesanan, e.message, Toast.LENGTH_SHORT).show()
+            }
+        }) {
+            @Throws(AuthFailureError::class)
+            override fun getHeaders(): Map<String, String> {
+                val headers = HashMap<String, String>()
+                headers["Accept"] = "application/json"
+                return headers
             }
         }
-    }
-    fun setupListener() {
-        button_create.setOnClickListener{
-            intentEdit(0,Constant.TYPE_CREATE)
-        }
+        queue!!.add(stringRequest)
     }
 
-    fun intentEdit(noteId : Int, intentType: Int){
-        startActivity(
-            Intent(applicationContext, EditKosActivity::class.java)
-                .putExtra("intent_id", noteId)
-                .putExtra("intent_type", intentType)
-        )
+    fun deletePesanan(id:Long) {
+        setLoading(true)
+        val stringRequest: StringRequest = object : StringRequest(Method.DELETE, KosApi.DELETE_URL + id, Response.Listener { response ->
+            setLoading(false)
+            val gson = Gson()
+            var kos = gson.fromJson(response, Kos::class.java)
+            if(kos != null)
+                Toast.makeText(this@ActivityPemesanan, "Data Berhasil Dihapus", Toast.LENGTH_SHORT).show()
+            allPesanan()
+        }, Response.ErrorListener { error ->
+            setLoading(false)
+            try {
+                val responseBody = String(error.networkResponse.data, StandardCharsets.UTF_8)
+                val errors = JSONObject(responseBody)
+                Toast.makeText(this@ActivityPemesanan, errors.getString("message"), Toast.LENGTH_SHORT).show()
+            } catch (e: Exception) {
+                Toast.makeText(this@ActivityPemesanan, e.message, Toast.LENGTH_SHORT).show()
+            }
+        }) {
+            @Throws(AuthFailureError::class)
+            override fun getHeaders(): Map<String, String> {
+                val headers = HashMap<String, String>()
+                headers["Accept"] = "application/json"
+                return headers
+            }
+        }
+        queue!!.add(stringRequest)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode == LAUNCH_ADD_ACTIVITY && resultCode == RESULT_OK) allPesanan()
+    }
+
+    private fun setLoading(isLoading: Boolean){
+        if(isLoading) {
+            window.setFlags(
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+            )
+            layoutLoading!!.visibility = View.VISIBLE
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+            layoutLoading!!.visibility = View.GONE
+        }
     }
 }
