@@ -60,7 +60,7 @@
         style="@style/TextAppearance.MaterialComponents.Headline6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Email"
+        android:text="Nomor Telepon"
         android:textSize="20sp"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="50dp"
@@ -87,7 +87,7 @@
         style="@style/TextAppearance.MaterialComponents.Headline6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nomor Telepon"
+        android:text="Email"
         android:textColor="@color/black"
         android:textSize="20sp"
         android:layout_marginTop="20dp"
@@ -178,5 +178,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
+
+    <include
+        android:id="@+id/layout_loading"
+        layout = "@layout/layout_loading"
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
