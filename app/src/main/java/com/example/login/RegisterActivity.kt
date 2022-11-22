@@ -181,6 +181,7 @@ class RegisterActivity : AppCompatActivity() {
     private fun createUser(mBundle: Bundle) {
 
         val createdUser = userModel(
+            0,
             binding.inputLayoutRegUsername.getEditText()?.getText().toString(),
             binding.inputLayoutNomorHandphone.getEditText()?.getText().toString(),
             binding.inputLayoutEmail.getEditText()?.getText().toString(),
