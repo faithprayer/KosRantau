@@ -103,14 +103,14 @@ class ActivityPemesanan : AppCompatActivity() {
         queue!!.add(stringRequest)
     }
 
-    fun deletePesanan(id:Long) {
+    fun deletePesanan(id: Int) {
         setLoading(true)
         val stringRequest: StringRequest = object : StringRequest(Method.DELETE, KosApi.DELETE_URL + id, Response.Listener { response ->
             setLoading(false)
             val gson = Gson()
             var kos = gson.fromJson(response, Kos::class.java)
             if(kos != null)
-                Toast.makeText(this@ActivityPemesanan, "Data Berhasil Dihapus", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@ActivityPemesanan, "Data Berhasil Dihapus", Toast.LENGTH_SHORT ).show()
             allPesanan()
         }, Response.ErrorListener { error ->
             setLoading(false)

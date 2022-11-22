@@ -33,7 +33,7 @@ import java.nio.charset.StandardCharsets
 
 class EditKosActivity : AppCompatActivity() {
     private var kosId: Int = 0
-    private var binding: ActivityEditKosBinding? = null
+    private lateinit var binding: ActivityEditKosBinding
     private var PELANGGAN_ID_1 = "pelanggan_notification_01"
     private val notificationId2 = 102
     private var editKos: EditText? = null
@@ -42,6 +42,7 @@ class EditKosActivity : AppCompatActivity() {
     private var editTanggalMasuk: EditText? =null
     private var layoutLoading: LinearLayout? = null
     private var queue: RequestQueue? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,10 +61,11 @@ class EditKosActivity : AppCompatActivity() {
         btnCancel.setOnClickListener { finish() }
         val btnSave = findViewById<Button>(R.id.btn_save)
         val tvTitle = findViewById<TextView>(R.id.tv_title)
-        val id = intent.getLongExtra("id", -1)
-        if(id == -1L) {
+        val id = intent.getIntExtra("id", -1)
+        if(id == -1) {
             tvTitle.setText("Tambah Pesanan")
             btnSave.setOnClickListener { createPesanan() }
+
         } else {
             tvTitle.setText("Edit Pesanan")
             getPesananById(id)
@@ -71,17 +73,9 @@ class EditKosActivity : AppCompatActivity() {
         }
     }
 
-    private fun getPesananById(id: Long) {
+    private fun getPesananById(id: Int) {
         setLoading(true)
         val stringRequest: StringRequest = object : StringRequest(Method.GET, KosApi.GET_BY_ID_URL + id, Response.Listener { response ->
-            val gson = Gson()
-            val kos = gson.fromJson(response, Kos::class.java)
-
-            editKos!!.setText(kos.namaKos)
-            editPengguna!!.setText(kos.namaPengguna)
-            editTanggalPesan!!.setText(kos.tanggalPesan)
-            editTanggalMasuk!!.setText(kos.tanggalMasuk)
-
             Toast.makeText(this@EditKosActivity, "Data Berhasil diambil!!", Toast.LENGTH_SHORT).show()
             setLoading(false)
         }, Response.ErrorListener { error ->
@@ -95,7 +89,7 @@ class EditKosActivity : AppCompatActivity() {
             }
         }) {
             @Throws(AuthFailureError::class)
-            override fun getHeaders(): MutableMap<String, String> {
+            override fun getHeaders(): Map<String, String> {
                 val headers = HashMap<String, String>()
                 headers["Accept"] = "application/json"
                 return headers
@@ -107,6 +101,7 @@ class EditKosActivity : AppCompatActivity() {
     private fun createPesanan() {
         setLoading(true)
         val kos = Kos(
+            0,
             editKos!!.text.toString(),
             editPengguna!!.text.toString(),
             editTanggalPesan!!.text.toString(),
@@ -151,15 +146,16 @@ class EditKosActivity : AppCompatActivity() {
         sendNotifications()
     }
 
-    private fun updatePesanan(id: Long) {
+    private fun updatePesanan(id: Int) {
         setLoading(true)
         val kos = Kos(
+            id,
             editKos!!.text.toString(),
             editPengguna!!.text.toString(),
             editTanggalPesan!!.text.toString(),
             editTanggalMasuk!!.text.toString()
         )
-        val stringRequest: StringRequest = object : StringRequest(Method.PUT, KosApi.UPDATE_URL+id, Response.Listener { response ->
+        val stringRequest: StringRequest = object : StringRequest(Method.PUT, KosApi.UPDATE_URL + id, Response.Listener { response ->
             val gson = Gson()
             val kos = gson.fromJson(response, Kos::class.java)
             if(kos != null)
@@ -192,16 +188,16 @@ class EditKosActivity : AppCompatActivity() {
                 params["tanggalMasuk"] = edit_tanggalMasuk.text.toString()
                 return params
             }
-            @Throws(AuthFailureError::class)
-            override fun getBody(): ByteArray {
-                val gson = Gson()
-                val requestBody = gson.toJson(kos)
-                return requestBody.toByteArray(StandardCharsets.UTF_8)
-            }
-
-            override fun getBodyContentType(): String {
-                return "application/x-www-form-urlencoded"
-            }
+//            @Throws(AuthFailureError::class)
+//            override fun getBody(): ByteArray {
+//                val gson = Gson()
+//                val requestBody = gson.toJson(kos)
+//                return requestBody.toByteArray(StandardCharsets.UTF_8)
+//            }
+//
+//            override fun getBodyContentType(): String {
+//                return "application/x-www-form-urlencoded"
+//            }
         }
         queue!!.add(stringRequest)
         createNotificationChannels()
