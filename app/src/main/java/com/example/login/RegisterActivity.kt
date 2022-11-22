@@ -115,7 +115,7 @@ class RegisterActivity : AppCompatActivity() {
             if (!checkRegis) {
                 return@OnClickListener
             }else{
-                createUser(mBundle)
+                registerUser(mBundle)
             }
 
 //            val user = User(0,username,nohandphone,email,tanggalLahir,password)
@@ -178,7 +178,7 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun createUser(mBundle: Bundle) {
+    private fun registerUser(mBundle: Bundle) {
 
         val createdUser = userModel(
             0,

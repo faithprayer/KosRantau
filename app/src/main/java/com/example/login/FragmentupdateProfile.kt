@@ -122,7 +122,6 @@ class FragmentupdateProfile : Fragment() {
 
     private fun updateData(id: Int, Password: String) {
         setLoading(true)
-
         val user= userModel(
             id,
             binding.updtUsername.text.toString(),
@@ -134,10 +133,12 @@ class FragmentupdateProfile : Fragment() {
 
         val stringRequest: StringRequest =
             object : StringRequest(Method.PUT, userApi.UPDATE_USER + id, Response.Listener { response ->
+
                 val gson = Gson()
                 var user = gson.fromJson(response, userModel::class.java)
 
                 if(user != null) {
+
                     var resJO = JSONObject(response.toString())
                     val  userobj = resJO.getJSONObject("data")
 
@@ -149,7 +150,6 @@ class FragmentupdateProfile : Fragment() {
                     Toast.makeText(activity, "User Berhasil Diupdate", Toast.LENGTH_SHORT).show()
                 }
                 setLoading(false)
-
             }, Response.ErrorListener { error ->
                 setLoading(false)
                 try {

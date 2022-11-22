@@ -75,7 +75,7 @@ class ProfileFragment : Fragment() {
         var id = sharedPreferences.getInt("id",0)
 
 
-        getUserByid(id)
+        getUser(id)
 
         binding.btnUpdate.setOnClickListener {
             transitionFragment(FragmentupdateProfile())
@@ -122,13 +122,10 @@ class ProfileFragment : Fragment() {
 //        binding.viewTanggalLahir.setText(user.TanggalLahir)
 //    }
 
-    private fun getUserByid(id: Int) {
+    private fun getUser(id: Int) {
         setLoading(true)
         val stringRequest: StringRequest = object :
             StringRequest(Method.GET, userApi.GET_BY_ID_URL + id, Response.Listener { response ->
-                // val gson = Gson()
-                // val mahasiswa = gson.fromJson(response, Mahasiswa::class.java)
-
                 var joUser = JSONObject(response.toString())
                 val userdata = joUser.getJSONObject("data")
 
@@ -139,11 +136,14 @@ class ProfileFragment : Fragment() {
 
                 Toast.makeText(activity, "Data User berhasil diambil!", Toast.LENGTH_SHORT).show()
                 setLoading(false)
+
             }, Response.ErrorListener { error ->
                 setLoading(false)
                 try {
+
                     val responseBody = String(error.networkResponse.data, StandardCharsets.UTF_8)
                     val errors = JSONObject(responseBody)
+
                     Toast.makeText(
                         activity,
                         errors.getString("message"),
@@ -152,6 +152,7 @@ class ProfileFragment : Fragment() {
                 }catch (e: Exception) {
                     Toast.makeText(activity, e.message, Toast.LENGTH_SHORT).show()
                 }
+
             }) {
             @Throws(AuthFailureError::class)
             override fun getHeaders(): Map<String, String> {
@@ -159,6 +160,7 @@ class ProfileFragment : Fragment() {
                 headers["Accept"] = "application/json"
                 return headers
             }
+
         }
         queue!!.add(stringRequest)
     }
