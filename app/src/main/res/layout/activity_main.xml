@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ImageView
+    <soup.neumorphism.NeumorphImageView
         android:id="@+id/imageView"
         android:layout_width="240dp"
         android:layout_height="120dp"
@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <TextView
+    <soup.neumorphism.NeumorphTextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
         android:paddingBottom="16dp"
         android:orientation="vertical">
 
-        <TextView
+        <soup.neumorphism.NeumorphTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Username"
@@ -63,7 +63,7 @@
                 android:inputType="text"/>
 
         </com.google.android.material.textfield.TextInputLayout>
-        <TextView
+        <soup.neumorphism.NeumorphTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Password"
@@ -95,17 +95,18 @@
         app:layout_constraintStart_toStartOf="@+id/LinearLayout2"
         app:layout_constraintTop_toBottomOf="@+id/LinearLayout2">
 
-        <com.google.android.material.button.MaterialButton
+        <soup.neumorphism.NeumorphButton
             android:id="@+id/btnLogin"
+            style="@style/Widget.Neumorph.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Login"
-            android:backgroundTint="#FF7A00"/>
+            app:neumorph_backgroundColor="#FF7A00"/>
 
     </LinearLayout>
 
-    <TextView
+    <soup.neumorphism.NeumorphTextView
         android:id="@+id/textMoveRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

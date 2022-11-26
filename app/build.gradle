@@ -13,6 +13,7 @@ android {
         minSdk 26
         targetSdk 32
         versionCode 1
+        multiDexEnabled = true
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -74,4 +75,7 @@ dependencies {
     implementation 'com.android.volley:volley:1.2.1'
 
     implementation 'com.google.code.gson:gson:2.8.8'
+
+    implementation 'com.github.fornewid:neumorphism:0.3.0'
+    implementation("androidx.multidex:multidex:2.0.1")
 }
