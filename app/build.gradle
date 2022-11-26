@@ -80,4 +80,16 @@ dependencies {
     implementation("androidx.multidex:multidex:2.0.1")
 
     implementation 'com.github.Spikeysanju:MotionToast:1.3.3.4'
+
+    implementation 'com.itextpdf:itext7-core:7.1.13'
+    implementation 'com.github.yuriy-budiyev:code-scanner:2.3.2'
+    implementation 'com.github.kenglxn.qrgen:android:2.6.0'
+    implementation 'com.google.mlkit:barcode-scanning:17.0.2'
+    implementation 'com.github.librepdf:openpdf:1.3.29'
+
+    def ev_version = "1.0.4"
+    implementation "com.wajahatkarim:easyvalidation-core:$ev_version"
+
+    // Shows Toasts by default for every validation error
+    implementation "com.wajahatkarim:easyvalidation-toast:$ev_version"
 }
