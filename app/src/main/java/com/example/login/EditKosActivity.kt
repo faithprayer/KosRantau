@@ -1,13 +1,17 @@
 package com.example.login
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
@@ -15,6 +19,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.android.volley.AuthFailureError
@@ -26,10 +31,34 @@ import com.example.login.api.KosApi
 import com.example.login.databinding.ActivityEditKosBinding
 import com.example.login.models.Kos
 import com.google.gson.Gson
+
+
+import com.wajahatkarim3.easyvalidation.core.view_ktx.nonEmpty
+import com.wajahatkarim3.easyvalidation.core.view_ktx.validator
 import kotlinx.android.synthetic.main.activity_edit_kos.*
 import kotlinx.android.synthetic.main.adapter_kos.*
 import org.json.JSONObject
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
 import java.nio.charset.StandardCharsets
+import com.itextpdf.barcodes.BarcodeQRCode
+import com.itextpdf.io.image.ImageDataFactory
+import com.itextpdf.io.source.ByteArrayOutputStream
+import com.itextpdf.kernel.colors.ColorConstants
+import com.itextpdf.kernel.geom.PageSize
+import com.itextpdf.kernel.pdf.PdfDocument
+import com.itextpdf.kernel.pdf.PdfWriter
+import com.itextpdf.layout.Document
+import com.itextpdf.layout.element.Cell
+import com.itextpdf.layout.element.Image
+import com.itextpdf.layout.element.Paragraph
+import com.itextpdf.layout.element.Table
+import com.itextpdf.layout.property.HorizontalAlignment
+import com.itextpdf.layout.property.TextAlignment
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 class EditKosActivity : AppCompatActivity() {
     private var kosId: Int = 0
@@ -46,7 +75,9 @@ class EditKosActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edit_kos)
+        binding = ActivityEditKosBinding.inflate(layoutInflater)
+        val view : View = binding!!.root
+        setContentView(view)
 
         queue = Volley.newRequestQueue(this)
 
@@ -55,22 +86,160 @@ class EditKosActivity : AppCompatActivity() {
         editTanggalPesan = findViewById(R.id.edit_tanggalPesan)
         editTanggalMasuk = findViewById(R.id.edit_tanggalMasuk)
 
+
+
         layoutLoading = findViewById(R.id.layout_loading)
 
         val btnCancel = findViewById<Button>(R.id.btn_cancel)
         btnCancel.setOnClickListener { finish() }
         val btnSave = findViewById<Button>(R.id.btn_save)
+
+
         val tvTitle = findViewById<TextView>(R.id.tv_title)
         val id = intent.getIntExtra("id", -1)
         if(id == -1) {
             tvTitle.setText("Tambah Pesanan")
-            btnSave.setOnClickListener { createPesanan() }
+            btnSave.setOnClickListener {
+                val nama_kos = binding!!.editKos.text.toString()
+                val nama_pemesan = binding!!.editPengguna.text.toString()
+                val tanggal_pesan = binding!!.editTanggalPesan.text.toString()
+                val tanggal_masuk = binding!!.editTanggalMasuk.text.toString()
+
+
+
+                edit_kos.validator()
+                    .nonEmpty()
+                    .addErrorCallback {
+                        edit_kos.error = it
+                    }
+                    .check()
+
+                edit_pengguna.validator()
+                    .nonEmpty()
+                    .addErrorCallback {
+                        edit_pengguna.error = it
+                    }
+                    .check()
+
+                edit_tanggalMasuk.validator()
+                    .nonEmpty()
+                    .addErrorCallback {
+                        edit_tanggalMasuk.error = it
+                    }
+                    .check()
+
+                edit_tanggalPesan.validator()
+                    .nonEmpty()
+                    .addErrorCallback {
+                        edit_tanggalPesan.error = it
+                    }
+                    .check()
+                createPdf(nama_kos, nama_pemesan, tanggal_pesan, tanggal_masuk)
+                createPesanan() }
 
         } else {
             tvTitle.setText("Edit Pesanan")
             getPesananById(id)
-            btnSave.setOnClickListener { updatePesanan(id) }
+            btnSave.setOnClickListener {
+
+                edit_kos.validator()
+                    .nonEmpty()
+                    .addErrorCallback {
+                        edit_kos.error = it
+                    }
+                    .check()
+
+                edit_pengguna.validator()
+                    .nonEmpty()
+                    .addErrorCallback {
+                        edit_pengguna.error = it
+                    }
+                    .check()
+
+                edit_tanggalMasuk.validator()
+                    .nonEmpty()
+                    .addErrorCallback {
+                        edit_tanggalMasuk.error = it
+                    }
+                    .check()
+
+                edit_tanggalPesan.validator()
+                    .nonEmpty()
+                    .addErrorCallback {
+                        edit_tanggalPesan.error = it
+                    }
+                    .check()
+                updatePesanan(id) }
         }
+    }
+    @SuppressLint("ObsoleteSdkInt")
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Throws(FileNotFoundException::class)
+    private fun createPdf(namaKos: String, namaPemesan: String, tanggalPesan: String, tanggalMasuk: String) {
+        val pdfPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString()
+        val file = File(pdfPath, "Data Pemesanan Kos.pdf")
+        FileOutputStream(file)
+
+        val writer = PdfWriter(file)
+        val pdfDocument = PdfDocument(writer)
+        val document = Document(pdfDocument)
+        pdfDocument.defaultPageSize = PageSize.A4
+        document.setMargins(5f, 5f, 5f, 5f)
+        @SuppressLint("UseCompatLoadingForDrawables") val d = getDrawable(R.drawable.kos1)
+
+        val bitmap = (d as BitmapDrawable?)!!.bitmap
+        val stream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+        val bitmapData = stream.toByteArray()
+        val imageData = ImageDataFactory.create(bitmapData)
+        val image = Image(imageData)
+        val dataPemesanan = Paragraph("Infromasi Pemesanan").setBold().setFontSize(24f)
+            .setTextAlignment(TextAlignment.CENTER)
+        val group = Paragraph(
+            """
+                Berikut adalah
+                Data Pemesanan Kos
+                """.trimIndent()).setTextAlignment(TextAlignment.CENTER).setFontSize(12f)
+
+        val width = floatArrayOf(100f, 100f)
+        val table = Table(width)
+
+        table.setHorizontalAlignment(HorizontalAlignment.CENTER)
+        table.addCell(Cell().add(Paragraph("Nama Kos")))
+        table.addCell(Cell().add(Paragraph(namaKos)))
+        table.addCell(Cell().add(Paragraph("Nama Pemesan")))
+        table.addCell(Cell().add(Paragraph(namaPemesan)))
+        table.addCell(Cell().add(Paragraph("Tanggal Pemesanan")))
+        table.addCell(Cell().add(Paragraph(tanggalPesan)))
+        table.addCell(Cell().add(Paragraph("Tanggal Masuk")))
+        table.addCell(Cell().add(Paragraph(tanggalMasuk)))
+        val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+        table.addCell(Cell().add(Paragraph("Tanggal Buat PDF")))
+        table.addCell(Cell().add(Paragraph(LocalDate.now().format(dateTimeFormatter))))
+        val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss a")
+        table.addCell(Cell().add(Paragraph("Pukul Pembuatan")))
+        table.addCell(Cell().add(Paragraph(LocalTime.now().format(timeFormatter))))
+
+        val barcodeQRCode = BarcodeQRCode(
+            """
+                $namaKos
+                $namaPemesan
+                $tanggalPesan
+                $tanggalMasuk
+                ${LocalDate.now().format(dateTimeFormatter)}
+                ${LocalTime.now().format(timeFormatter)}
+                """.trimIndent())
+        val qrCodeObject = barcodeQRCode.createFormXObject(ColorConstants.BLACK, pdfDocument)
+        val qrCodeImage = Image(qrCodeObject).setWidth(80f).setHorizontalAlignment(HorizontalAlignment.CENTER)
+
+        document.add(image)
+        document.add(dataPemesanan)
+        document.add(group)
+        document.add(table)
+        document.add(qrCodeImage)
+
+        document.close()
+        Toast.makeText(this, "Pdf Created", Toast.LENGTH_LONG).show()
     }
 
     private fun getPesananById(id: Int) {
@@ -114,17 +283,12 @@ class EditKosActivity : AppCompatActivity() {
                 Toast.makeText(this@EditKosActivity, "Data Berhasil Ditambahkan", Toast.LENGTH_SHORT).show()
             val returnIntent = Intent()
             setResult(RESULT_OK, returnIntent)
+            createNotificationChannels()
+            sendNotifications()
             finish()
             setLoading(false)
-        }, Response.ErrorListener { error ->
+        }, Response.ErrorListener {
             setLoading(false)
-            try {
-                val responseBody = String(error.networkResponse.data, StandardCharsets.UTF_8)
-                val errors = JSONObject(responseBody)
-                Toast.makeText(this@EditKosActivity, errors.getString("message"), Toast.LENGTH_SHORT).show()
-            } catch (e:Exception) {
-                Toast.makeText(this@EditKosActivity, e.message, Toast.LENGTH_SHORT).show()
-            }
         }) {
             @Throws(AuthFailureError::class)
             override fun getHeaders(): MutableMap<String, String> {
@@ -142,8 +306,7 @@ class EditKosActivity : AppCompatActivity() {
             }
         }
         queue!!.add(stringRequest)
-        createNotificationChannels()
-        sendNotifications()
+
     }
 
     private fun updatePesanan(id: Int) {
@@ -162,6 +325,8 @@ class EditKosActivity : AppCompatActivity() {
                 Toast.makeText(this@EditKosActivity, "Data berhasil diupdate", Toast.LENGTH_SHORT).show()
             val returnIntent = Intent()
             setResult(RESULT_OK, returnIntent)
+            createNotificationChannels()
+            sendNotifications()
             finish()
             setLoading(false)
         }, Response.ErrorListener { error ->
@@ -200,9 +365,7 @@ class EditKosActivity : AppCompatActivity() {
 //            }
         }
         queue!!.add(stringRequest)
-        createNotificationChannels()
-        sendNotifications()
-        finish()
+
     }
 
     private fun setLoading(isLoading: Boolean){
@@ -255,4 +418,5 @@ class EditKosActivity : AppCompatActivity() {
             notify(notificationId2, builder.build())
         }
     }
+
 }
