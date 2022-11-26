@@ -22,6 +22,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.res.ResourcesCompat
 import com.android.volley.AuthFailureError
 import com.android.volley.RequestQueue
 import com.android.volley.Response
@@ -56,6 +57,7 @@ import com.itextpdf.layout.element.Paragraph
 import com.itextpdf.layout.element.Table
 import com.itextpdf.layout.property.HorizontalAlignment
 import com.itextpdf.layout.property.TextAlignment
+import www.sanju.motiontoast.MotionToast
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -105,29 +107,24 @@ class EditKosActivity : AppCompatActivity() {
                 val tanggal_pesan = binding!!.editTanggalPesan.text.toString()
                 val tanggal_masuk = binding!!.editTanggalMasuk.text.toString()
 
-
-
                 edit_kos.validator()
                     .nonEmpty()
                     .addErrorCallback {
                         edit_kos.error = it
                     }
                     .check()
-
                 edit_pengguna.validator()
                     .nonEmpty()
                     .addErrorCallback {
                         edit_pengguna.error = it
                     }
                     .check()
-
                 edit_tanggalMasuk.validator()
                     .nonEmpty()
                     .addErrorCallback {
                         edit_tanggalMasuk.error = it
                     }
                     .check()
-
                 edit_tanggalPesan.validator()
                     .nonEmpty()
                     .addErrorCallback {
@@ -148,21 +145,18 @@ class EditKosActivity : AppCompatActivity() {
                         edit_kos.error = it
                     }
                     .check()
-
                 edit_pengguna.validator()
                     .nonEmpty()
                     .addErrorCallback {
                         edit_pengguna.error = it
                     }
                     .check()
-
                 edit_tanggalMasuk.validator()
                     .nonEmpty()
                     .addErrorCallback {
                         edit_tanggalMasuk.error = it
                     }
                     .check()
-
                 edit_tanggalPesan.validator()
                     .nonEmpty()
                     .addErrorCallback {
@@ -280,7 +274,13 @@ class EditKosActivity : AppCompatActivity() {
             val gson = Gson()
             var kos = gson.fromJson(response, Kos::class.java)
             if(kos != null)
-                Toast.makeText(this@EditKosActivity, "Data Berhasil Ditambahkan", Toast.LENGTH_SHORT).show()
+                MotionToast.Companion.darkToast(this@EditKosActivity,
+                    "Pemesanan Berhasil",
+                    "Data Berhasil Dibuat",
+                    MotionToast.TOAST_SUCCESS,
+                    MotionToast.GRAVITY_BOTTOM,
+                    MotionToast.LONG_DURATION,
+                    ResourcesCompat.getFont(this,www.sanju.motiontoast.R.font.helvetica_regular))
             val returnIntent = Intent()
             setResult(RESULT_OK, returnIntent)
             createNotificationChannels()
