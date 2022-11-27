@@ -8,6 +8,7 @@ import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.Toast
 import android.widget.SearchView
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -23,6 +24,7 @@ import com.google.gson.Gson
 import kotlinx.android.synthetic.main.activity_pemesanan.*
 import kotlinx.android.synthetic.main.fragment_pemesanan.*
 import org.json.JSONObject
+import www.sanju.motiontoast.MotionToast
 import java.nio.charset.StandardCharsets
 
 class ActivityPemesanan : AppCompatActivity() {
@@ -80,7 +82,7 @@ class ActivityPemesanan : AppCompatActivity() {
             srPemesanan!!.isRefreshing = false
 
             if(!kos.isEmpty())
-                Toast.makeText(this@ActivityPemesanan, "Data Berhasil Diambil", Toast.LENGTH_SHORT).show()
+
             else
                 Toast.makeText(this@ActivityPemesanan, "Data Kosong!", Toast.LENGTH_SHORT).show()
         }, Response.ErrorListener { error ->
@@ -110,7 +112,13 @@ class ActivityPemesanan : AppCompatActivity() {
             val gson = Gson()
             var kos = gson.fromJson(response, Kos::class.java)
             if(kos != null)
-                Toast.makeText(this@ActivityPemesanan, "Data Berhasil Dihapus", Toast.LENGTH_SHORT ).show()
+                MotionToast.Companion.darkToast(this@ActivityPemesanan,
+                    "Pengahapusan Berhasil",
+                    "Data Berhasil Dihapus",
+                    MotionToast.TOAST_SUCCESS,
+                    MotionToast.GRAVITY_BOTTOM,
+                    MotionToast.LONG_DURATION,
+                    ResourcesCompat.getFont(this,www.sanju.motiontoast.R.font.helvetica_regular))
             allPesanan()
         }, Response.ErrorListener { error ->
             setLoading(false)

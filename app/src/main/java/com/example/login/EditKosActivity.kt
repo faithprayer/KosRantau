@@ -57,6 +57,7 @@ import com.itextpdf.layout.element.Paragraph
 import com.itextpdf.layout.element.Table
 import com.itextpdf.layout.property.HorizontalAlignment
 import com.itextpdf.layout.property.TextAlignment
+import com.wajahatkarim3.easyvalidation.core.collection_ktx.nonEmptyList
 import www.sanju.motiontoast.MotionToast
 import java.time.LocalDate
 import java.time.LocalTime
@@ -119,20 +120,23 @@ class EditKosActivity : AppCompatActivity() {
                         edit_pengguna.error = it
                     }
                     .check()
-                edit_tanggalMasuk.validator()
-                    .nonEmpty()
-                    .addErrorCallback {
-                        edit_tanggalMasuk.error = it
-                    }
-                    .check()
                 edit_tanggalPesan.validator()
                     .nonEmpty()
                     .addErrorCallback {
                         edit_tanggalPesan.error = it
                     }
                     .check()
-                createPdf(nama_kos, nama_pemesan, tanggal_pesan, tanggal_masuk)
-                createPesanan() }
+                edit_tanggalMasuk.validator()
+                    .nonEmpty()
+                    .addErrorCallback {
+                        edit_tanggalMasuk.error = it
+                    }
+                    .addSuccessCallback {
+                        createPdf(nama_kos, nama_pemesan, tanggal_pesan, tanggal_masuk)
+                        createPesanan()
+                    }
+                    .check()
+                 }
 
         } else {
             tvTitle.setText("Edit Pesanan")
@@ -322,7 +326,13 @@ class EditKosActivity : AppCompatActivity() {
             val gson = Gson()
             val kos = gson.fromJson(response, Kos::class.java)
             if(kos != null)
-                Toast.makeText(this@EditKosActivity, "Data berhasil diupdate", Toast.LENGTH_SHORT).show()
+                MotionToast.Companion.darkToast(this@EditKosActivity,
+                    "Pengeditan Berhasil",
+                    "Data Berhasil Diedit",
+                    MotionToast.TOAST_SUCCESS,
+                    MotionToast.GRAVITY_BOTTOM,
+                    MotionToast.LONG_DURATION,
+                    ResourcesCompat.getFont(this,www.sanju.motiontoast.R.font.helvetica_regular))
             val returnIntent = Intent()
             setResult(RESULT_OK, returnIntent)
             createNotificationChannels()
