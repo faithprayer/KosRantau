@@ -31,12 +31,9 @@ class LoginTest {
 
     @Test
     fun loginTest() {
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        Thread.sleep(3000)
 
-        val textInputEditText = onView(
+
+        val textInputEditText= onView(
             allOf(
                 withId(R.id.TextInputUsername),
                 childAtPosition(
@@ -49,25 +46,10 @@ class LoginTest {
                 isDisplayed()
             )
         )
-        textInputEditText.perform(click())
-
-        val textInputEditText2 = onView(
-            allOf(
-                withId(R.id.TextInputUsername),
-                childAtPosition(
-                    childAtPosition(
-                        withId(R.id.inputLayoutUsername),
-                        0
-                    ),
-                    0
-                ),
-                isDisplayed()
-            )
-        )
-        textInputEditText2.perform(replaceText("12"), closeSoftKeyboard())
+        textInputEditText.perform(replaceText("12"), closeSoftKeyboard())
         onView(isRoot()).perform(waitFor(3000))
 
-        val textInputEditText3 = onView(
+        val textInputEditText2 = onView(
             allOf(
                 withId(R.id.textInputPassword),
                 childAtPosition(
@@ -80,7 +62,7 @@ class LoginTest {
                 isDisplayed()
             )
         )
-        textInputEditText3.perform(replaceText("12"), closeSoftKeyboard())
+        textInputEditText2.perform(replaceText("12"), closeSoftKeyboard())
         onView(isRoot()).perform(waitFor(3000))
 
         val neumorphButton = onView(
