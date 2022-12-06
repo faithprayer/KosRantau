@@ -267,50 +267,65 @@ class EditKosActivity : AppCompatActivity() {
 
     private fun createPesanan() {
         setLoading(true)
-        val kos = Kos(
-            0,
-            editKos!!.text.toString(),
-            editPengguna!!.text.toString(),
-            editTanggalPesan!!.text.toString(),
-            editTanggalMasuk!!.text.toString()
-        )
-        val stringRequest: StringRequest = object : StringRequest(Method.POST, KosApi.ADD_URL, Response.Listener { response ->
-            val gson = Gson()
-            var kos = gson.fromJson(response, Kos::class.java)
-            if(kos != null)
-                MotionToast.Companion.darkToast(this@EditKosActivity,
-                    "Pemesanan Berhasil",
-                    "Data Berhasil Dibuat",
-                    MotionToast.TOAST_SUCCESS,
-                    MotionToast.GRAVITY_BOTTOM,
-                    MotionToast.LONG_DURATION,
-                    ResourcesCompat.getFont(this,www.sanju.motiontoast.R.font.helvetica_regular))
-            val returnIntent = Intent()
-            setResult(RESULT_OK, returnIntent)
-            createNotificationChannels()
-            sendNotifications()
-            finish()
-            setLoading(false)
-        }, Response.ErrorListener {
-            setLoading(false)
-        }) {
-            @Throws(AuthFailureError::class)
-            override fun getHeaders(): MutableMap<String, String> {
-                val headers = HashMap<String, String>()
-                headers["Accept"] = "application/json"
-                return headers
-            }
-            override fun getParams(): MutableMap<String, String>? {
-                val params = HashMap<String, String>()
-                params["namaKos"] = edit_kos.text.toString()
-                params["namaPengguna"] = edit_pengguna.text.toString()
-                params["tanggalPesan"] = edit_tanggalPesan.text.toString()
-                params["tanggalMasuk"] = edit_tanggalMasuk.text.toString()
-                return params
-            }
-        }
-        queue!!.add(stringRequest)
 
+        if(editKos!!.text.toString().isEmpty()) {
+            Toast.makeText(this@EditKosActivity, "Nama Kos tidak boleh kosong!", Toast.LENGTH_SHORT).show()
+        }
+        else if(editPengguna!!.text.toString().isEmpty()) {
+            Toast.makeText(this@EditKosActivity, "Nama Pengguna tidak boleh kosong!", Toast.LENGTH_SHORT).show()
+        }
+        else if(editTanggalPesan!!.text.toString().isEmpty()) {
+            Toast.makeText(this@EditKosActivity, "Tanggal Pesan tidak boleh kosong!", Toast.LENGTH_SHORT).show()
+        }
+        else if(editTanggalMasuk!!.text.toString().isEmpty()) {
+            Toast.makeText(this@EditKosActivity, "Tanggal Masuk tidak boleh kosong!", Toast.LENGTH_SHORT).show()
+        }
+        else{
+            val kos = Kos(
+                0,
+                editKos!!.text.toString(),
+                editPengguna!!.text.toString(),
+                editTanggalPesan!!.text.toString(),
+                editTanggalMasuk!!.text.toString()
+            )
+            val stringRequest: StringRequest = object : StringRequest(Method.POST, KosApi.ADD_URL, Response.Listener { response ->
+                val gson = Gson()
+                var kos = gson.fromJson(response, Kos::class.java)
+                if(kos != null)
+                    MotionToast.Companion.darkToast(this@EditKosActivity,
+                        "Pemesanan Berhasil",
+                        "Data Berhasil Dibuat",
+                        MotionToast.TOAST_SUCCESS,
+                        MotionToast.GRAVITY_BOTTOM,
+                        MotionToast.LONG_DURATION,
+                        ResourcesCompat.getFont(this,www.sanju.motiontoast.R.font.helvetica_regular))
+                val returnIntent = Intent()
+                setResult(RESULT_OK, returnIntent)
+                createNotificationChannels()
+                sendNotifications()
+                finish()
+                setLoading(false)
+            }, Response.ErrorListener {
+                setLoading(false)
+            }) {
+                @Throws(AuthFailureError::class)
+                override fun getHeaders(): MutableMap<String, String> {
+                    val headers = HashMap<String, String>()
+                    headers["Accept"] = "application/json"
+                    return headers
+                }
+                override fun getParams(): MutableMap<String, String>? {
+                    val params = HashMap<String, String>()
+                    params["namaKos"] = edit_kos.text.toString()
+                    params["namaPengguna"] = edit_pengguna.text.toString()
+                    params["tanggalPesan"] = edit_tanggalPesan.text.toString()
+                    params["tanggalMasuk"] = edit_tanggalMasuk.text.toString()
+                    return params
+                }
+            }
+            queue!!.add(stringRequest)
+        }
+        setLoading(false)
     }
 
     private fun updatePesanan(id: Int) {
