@@ -27,10 +27,26 @@ class EditKosActivityTest {
 
     @Rule
     @JvmField
-    var mActivityScenarioRule = ActivityScenarioRule(EditKosActivity::class.java)
+    var mActivityScenarioRule = ActivityScenarioRule(ActivityPemesanan::class.java)
 
     @Test
     fun editKosActivityTest() {
+        val floatingActionButton = onView(
+            allOf(
+                withId(R.id.fab_add),
+                childAtPosition(
+                    childAtPosition(
+                        withId(android.R.id.content),
+                        0
+                    ),
+                    2
+                ),
+                isDisplayed()
+            )
+        )
+        floatingActionButton.perform(click())
+        onView(isRoot()).perform(waitFor(3000))
+
         val materialButton = onView(
             allOf(
                 withId(R.id.btn_save), withText("Simpan"),
