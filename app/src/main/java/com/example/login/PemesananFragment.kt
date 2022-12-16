@@ -22,7 +22,7 @@ class PemesananFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val btnAddPeminjam: Button = view.findViewById(R.id.btnAddPeminjam)
-
+        val btnSurvey : Button = view.findViewById(R.id.btnSurvey)
 
         btnAddPeminjam.setOnClickListener(View.OnClickListener {
             val movePeminjam = Intent(this@PemesananFragment.context, ActivityPemesanan::class.java)
@@ -32,6 +32,11 @@ class PemesananFragment : Fragment() {
         btnLokasi.setOnClickListener {
             transitionFragment(FragmentLokasi());
         }
+
+        btnSurvey.setOnClickListener(View.OnClickListener {
+            val moveSurvey = Intent(this@PemesananFragment.context, ActivitySurvey::class.java)
+            startActivity(moveSurvey)
+        })
 
     }
 
