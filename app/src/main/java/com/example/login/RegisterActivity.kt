@@ -110,7 +110,6 @@ class RegisterActivity : AppCompatActivity() {
             mBundle.putString("tanggalLahir", tanggalLahir)
             mBundle.putString("password", password)
 
-            createPdf(username, nohandphone, email, tanggalLahir)
 
             if (username.isEmpty()) {
                 binding.inputLayoutRegUsername.setError("Username must be filled with text")
@@ -159,78 +158,6 @@ class RegisterActivity : AppCompatActivity() {
             val moveLog = Intent(this, MainActivity::class.java)
             startActivity(moveLog)
         }
-    }
-
-    @SuppressLint("ObsoleteSdkInt")
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    @Throws(FileNotFoundException::class)
-
-    private fun createPdf(username: String, nohandphone: String, email: String, tanggalLahir: String) {
-        val pdfPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString()
-        val file = File(pdfPath, "Data Pengguna.pdf")
-        FileOutputStream(file)
-
-        val writer = PdfWriter(file)
-        val pdfDocument = PdfDocument(writer)
-        val document = Document(pdfDocument)
-        pdfDocument.defaultPageSize = PageSize.A4
-        document.setMargins(5f, 5f, 5f, 5f)
-        @SuppressLint("UseCompatLoadingForDrawables") val d = getDrawable(R.drawable.logo)
-
-        val bitmap = (d as BitmapDrawable?)!!.bitmap
-        val stream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-        val bitmapData = stream.toByteArray()
-        val imageData = ImageDataFactory.create(bitmapData)
-        val image = Image(imageData)
-        val dataPemesanan = Paragraph("Informasi Pengguna").setBold().setFontSize(24f)
-            .setTextAlignment(TextAlignment.CENTER)
-        val group = Paragraph(
-            """
-                Berikut adalah
-                Data Pengguna 
-                """.trimIndent()).setTextAlignment(TextAlignment.CENTER).setFontSize(12f)
-
-        val width = floatArrayOf(100f, 100f)
-        val table = Table(width)
-
-        table.setHorizontalAlignment(HorizontalAlignment.CENTER)
-        table.addCell(Cell().add(Paragraph("Nama ")))
-        table.addCell(Cell().add(Paragraph(username)))
-        table.addCell(Cell().add(Paragraph("Nomor Handphone")))
-        table.addCell(Cell().add(Paragraph(nohandphone)))
-        table.addCell(Cell().add(Paragraph("Email")))
-        table.addCell(Cell().add(Paragraph(email)))
-        table.addCell(Cell().add(Paragraph("Tanggal Lahir")))
-        table.addCell(Cell().add(Paragraph(tanggalLahir)))
-        val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-        table.addCell(Cell().add(Paragraph("Tanggal Buat PDF")))
-        table.addCell(Cell().add(Paragraph(LocalDate.now().format(dateTimeFormatter))))
-        val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss a")
-        table.addCell(Cell().add(Paragraph("Pukul Pembuatan")))
-        table.addCell(Cell().add(Paragraph(LocalTime.now().format(timeFormatter))))
-
-        val barcodeQRCode = BarcodeQRCode(
-            """
-                $username
-                $nohandphone
-                $email
-                $tanggalLahir
-                ${LocalDate.now().format(dateTimeFormatter)}
-                ${LocalTime.now().format(timeFormatter)}
-                """.trimIndent())
-        val qrCodeObject = barcodeQRCode.createFormXObject(ColorConstants.BLACK, pdfDocument)
-        val qrCodeImage = Image(qrCodeObject).setWidth(80f).setHorizontalAlignment(
-            HorizontalAlignment.CENTER)
-
-        document.add(image)
-        document.add(dataPemesanan)
-        document.add(group)
-        document.add(table)
-        document.add(qrCodeImage)
-
-        document.close()
-        Toast.makeText(this, "Pdf Created", Toast.LENGTH_LONG).show()
     }
 
     private fun createNotificationChannel() {
